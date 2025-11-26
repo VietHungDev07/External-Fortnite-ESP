@@ -26,7 +26,7 @@ namespace Offset
 
 
 //Mesh:
-	const uintptr_t Mesh = 0x330;
+	const uintptr_t Mesh = 0x330; 
 	const uintptr_t CachedBoneSpaceTransforms = 0x5E8; //BoneArray
 	const uintptr_t CachedComponentSpaceTransforms = 0x5F8; //BoneCache
 	const uintptr_t ComponentToWorld = 0x1E0; //class alignas(0x10) USceneComponent : public UActorComponent ->

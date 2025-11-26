@@ -1,30 +1,29 @@
 #include "SDK.h"
 #include <Driver/Driver.h>
 #include <Offset.h>
-
+using namespace std;
 namespace Math 
 {
-	D3DMATRIX MatrixMultiplication(D3DMATRIX pM1, D3DMATRIX pM2)
+	inline D3DMATRIX MatrixMultiplication(D3DMATRIX pm1, D3DMATRIX pm2)
 	{
-		D3DMATRIX pOut;
-		pOut._11 = pM1._11 * pM2._11 + pM1._12 * pM2._21 + pM1._13 * pM2._31 + pM1._14 * pM2._41;
-		pOut._12 = pM1._11 * pM2._12 + pM1._12 * pM2._22 + pM1._13 * pM2._32 + pM1._14 * pM2._42;
-		pOut._13 = pM1._11 * pM2._13 + pM1._12 * pM2._23 + pM1._13 * pM2._33 + pM1._14 * pM2._43;
-		pOut._14 = pM1._11 * pM2._14 + pM1._12 * pM2._24 + pM1._13 * pM2._34 + pM1._14 * pM2._44;
-		pOut._21 = pM1._21 * pM2._11 + pM1._22 * pM2._21 + pM1._23 * pM2._31 + pM1._24 * pM2._41;
-		pOut._22 = pM1._21 * pM2._12 + pM1._22 * pM2._22 + pM1._23 * pM2._32 + pM1._24 * pM2._42;
-		pOut._23 = pM1._21 * pM2._13 + pM1._22 * pM2._23 + pM1._23 * pM2._33 + pM1._24 * pM2._43;
-		pOut._24 = pM1._21 * pM2._14 + pM1._22 * pM2._24 + pM1._23 * pM2._34 + pM1._24 * pM2._44;
-		pOut._31 = pM1._31 * pM2._11 + pM1._32 * pM2._21 + pM1._33 * pM2._31 + pM1._34 * pM2._41;
-		pOut._32 = pM1._31 * pM2._12 + pM1._32 * pM2._22 + pM1._33 * pM2._32 + pM1._34 * pM2._42;
-		pOut._33 = pM1._31 * pM2._13 + pM1._32 * pM2._23 + pM1._33 * pM2._33 + pM1._34 * pM2._43;
-		pOut._34 = pM1._31 * pM2._14 + pM1._32 * pM2._24 + pM1._33 * pM2._34 + pM1._34 * pM2._44;
-		pOut._41 = pM1._41 * pM2._11 + pM1._42 * pM2._21 + pM1._43 * pM2._31 + pM1._44 * pM2._41;
-		pOut._42 = pM1._41 * pM2._12 + pM1._42 * pM2._22 + pM1._43 * pM2._32 + pM1._44 * pM2._42;
-		pOut._43 = pM1._41 * pM2._13 + pM1._42 * pM2._23 + pM1._43 * pM2._33 + pM1._44 * pM2._43;
-		pOut._44 = pM1._41 * pM2._14 + pM1._42 * pM2._24 + pM1._43 * pM2._34 + pM1._44 * pM2._44;
-
-		return pOut;
+		D3DMATRIX pout{};
+		pout._11 = pm1._11 * pm2._11 + pm1._12 * pm2._21 + pm1._13 * pm2._31 + pm1._14 * pm2._41;
+		pout._12 = pm1._11 * pm2._12 + pm1._12 * pm2._22 + pm1._13 * pm2._32 + pm1._14 * pm2._42;
+		pout._13 = pm1._11 * pm2._13 + pm1._12 * pm2._23 + pm1._13 * pm2._33 + pm1._14 * pm2._43;
+		pout._14 = pm1._11 * pm2._14 + pm1._12 * pm2._24 + pm1._13 * pm2._34 + pm1._14 * pm2._44;
+		pout._21 = pm1._21 * pm2._11 + pm1._22 * pm2._21 + pm1._23 * pm2._31 + pm1._24 * pm2._41;
+		pout._22 = pm1._21 * pm2._12 + pm1._22 * pm2._22 + pm1._23 * pm2._32 + pm1._24 * pm2._42;
+		pout._23 = pm1._21 * pm2._13 + pm1._22 * pm2._23 + pm1._23 * pm2._33 + pm1._24 * pm2._43;
+		pout._24 = pm1._21 * pm2._14 + pm1._22 * pm2._24 + pm1._23 * pm2._34 + pm1._24 * pm2._44;
+		pout._31 = pm1._31 * pm2._11 + pm1._32 * pm2._21 + pm1._33 * pm2._31 + pm1._34 * pm2._41;
+		pout._32 = pm1._31 * pm2._12 + pm1._32 * pm2._22 + pm1._33 * pm2._32 + pm1._34 * pm2._42;
+		pout._33 = pm1._31 * pm2._13 + pm1._32 * pm2._23 + pm1._33 * pm2._33 + pm1._34 * pm2._43;
+		pout._34 = pm1._31 * pm2._14 + pm1._32 * pm2._24 + pm1._33 * pm2._34 + pm1._34 * pm2._44;
+		pout._41 = pm1._41 * pm2._11 + pm1._42 * pm2._21 + pm1._43 * pm2._31 + pm1._44 * pm2._41;
+		pout._42 = pm1._41 * pm2._12 + pm1._42 * pm2._22 + pm1._43 * pm2._32 + pm1._44 * pm2._42;
+		pout._43 = pm1._41 * pm2._13 + pm1._42 * pm2._23 + pm1._43 * pm2._33 + pm1._44 * pm2._43;
+		pout._44 = pm1._41 * pm2._14 + pm1._42 * pm2._24 + pm1._43 * pm2._34 + pm1._44 * pm2._44;
+		return pout;
 	}
 
 	inline _MATRIX Matrix(FVector Vec4, FVector origin = FVector(0, 0, 0))
@@ -144,7 +143,7 @@ namespace Aactor
 	FVector GetActorLocation(uintptr_t actor)
 	{
 		uintptr_t root = ReadMemory<uintptr_t>(actor + Offset::RootComponent);
-		std::cout << "root: " << root << std::endl;
+	//	std::cout << "root: " << root << std::endl;
 		//if (!root) return FVector(); 
 
 		FVector location = ReadMemory<FVector>(root + Offset::RelativeLocation);
@@ -213,14 +212,13 @@ namespace Bone
 		return ReadMemory<FTransform>(bonearray + (index * 0x60));
 	}
 
-	FVector GetBoneWithRotation(uintptr_t AactorAddress, int id)
+	FVector GetBoneWithRotation(uintptr_t mesh, int id)
 	{
-		FTransform bone = GetBoneIndex(AactorAddress, id);
-		FTransform ComponentToWorld = ReadMemory<FTransform>(GetMesh(AactorAddress) + Offset::ComponentToWorld);
-
-		D3DMATRIX Matrix;
-		Matrix = Math::MatrixMultiplication(bone.ToMatrixWithScale(), ComponentToWorld.ToMatrixWithScale());
-
-		return FVector(Matrix._41, Matrix._42, Matrix._43);
+		uintptr_t bone_array = ReadMemory<uintptr_t>(mesh + Offset::CachedBoneSpaceTransforms);
+		if (bone_array == 0) bone_array = ReadMemory<uintptr_t>(mesh + Offset::CachedComponentSpaceTransforms);
+		FTransform bone = ReadMemory<FTransform>(bone_array + (id * 0x60));
+		FTransform component_to_world = ReadMemory<FTransform>(mesh + Offset::ComponentToWorld);
+		D3DMATRIX matrix = Math::MatrixMultiplication(bone.ToMatrixWithScale(), component_to_world.ToMatrixWithScale());
+		return FVector(matrix._41, matrix._42, matrix._43);
 	}
 }

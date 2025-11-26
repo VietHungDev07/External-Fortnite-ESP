@@ -65,88 +65,46 @@ void InputHandler() {
 }
 void DrawEntity()
 {
-//	cout << "Aactor::GetPlayerArraySize(): " << Aactor::GetPlayerArraySize() << endl;
+
 	int size = Aactor::GetPlayerArraySize();
-//	std::cout << "PlayerArray Size: " << size << std::endl;
+
 
 	for (int i = 0; i < size; i++)
 	{
-		//cout << i << endl;
+
 		auto AactorAddress = Aactor::GetActorAddress(i);
-
-
-		FVector worldLocation = Aactor::GetActorLocation(AactorAddress);
-	//	cout << i<<".worldLocation.x: " << worldLocation.x << ", worldLocation.y:" << worldLocation.y << ", worldLocation.z:" << worldLocation.z << endl;
-		//float distance = worldLocation.Distance(Aactor::GetActorLocation(UPlayer::GetLocalPlayer()));
-		//cout << "distance[" << i << "]: " << distance/100.0f << endl;
-		FVector2D screen = Camera::ProjectWorldToScreen(worldLocation);
-
 		uintptr_t mesh = Bone::GetMesh(AactorAddress);
-		cout << "mesh: " << mesh << endl;
-		FVector Headpose = Bone::GetBoneWithRotation(mesh, 68);
-		cout << i << ".Headpose.x: " << Headpose.x << ", Headpose.y:" << Headpose.y << ", Headpose.z:" << Headpose.z << endl;
-		FVector bone00 = Bone::GetBoneWithRotation(mesh, 0);
-		FVector2D bottome = Camera::ProjectWorldToScreen(bone00);
-		FVector2D Headbox = Camera::ProjectWorldToScreen(FVector(Headpose.x, Headpose.y, Headpose.z + 15));
-		FVector2D w2sheade = Camera::ProjectWorldToScreen(Headpose);
-		FVector vHeadBone = Bone::GetBoneWithRotation(mesh, 68);
-		FVector vRootBone = Bone::GetBoneWithRotation(mesh, 0);
-		FVector Chest = Bone::GetBoneWithRotation(mesh, 2);
-		FVector2D vHeadBoneOut =  Camera::ProjectWorldToScreen(FVector(vHeadBone.x, vHeadBone.y, vHeadBone.z + 15));
-		FVector2D vRootBoneOut =  Camera::ProjectWorldToScreen(vRootBone);
-		FVector2D vChestOut = Camera::ProjectWorldToScreen(FVector(Chest.x, Chest.y, Chest.z + 15));
-		
 
+		FVector2D Bone1 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 66));
+		FVector2D Bone2 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 9));
+		FVector2D Bone3 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 38));
+		FVector2D Bone4 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 10));
+		FVector2D Bone5 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 39));
+		FVector2D Bone6 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 62));
+		FVector2D Bone7 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 33));
+		FVector2D Bone8 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 7));
+		FVector2D Bone9 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 3));
+		FVector2D Bone10 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 71));
+		FVector2D Bone11 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 78));
+		FVector2D Bone12 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 79));
+		FVector2D Bone13 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 72));
+		FVector2D Bone14 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 75));
+		FVector2D Bone15 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 82));
 		
-		float distance = worldLocation.Distance(Aactor::GetActorLocation(UPlayer::GetLocalPlayer())) / 100.f;
-		
-		float BoxHeight = abs(Headbox.y - bottome.y);
-		float BoxWidth = BoxHeight * 0.55;
-		
-		float LeftX = (float)Headbox.x - (BoxWidth / 1);
-		float LeftY = (float)bottome.y;
-		
-		float Height1 = abs(Headbox.y - bottome.y);
-		float Width1 = Height1 * 0.65;
-		
-		float CornerHeight = abs(Headbox.y - bottome.y);
-		float CornerWidth = CornerHeight * 0.5f;
-
-		FVector2D bottom1 = Camera::ProjectWorldToScreen(FVector(vRootBone.x + 40, vRootBone.y - 40, vRootBone.z));
-		FVector2D bottom2 = Camera::ProjectWorldToScreen(FVector(vRootBone.x - 40, vRootBone.y - 40, vRootBone.z));
-		FVector2D bottom3 = Camera::ProjectWorldToScreen(FVector(vRootBone.x - 40, vRootBone.y + 40, vRootBone.z));
-		FVector2D bottom4 = Camera::ProjectWorldToScreen(FVector(vRootBone.x + 40, vRootBone.y + 40, vRootBone.z));
-
-		FVector2D top1 = Camera::ProjectWorldToScreen(FVector(vHeadBone.x + 40, vHeadBone.y - 40, vHeadBone.z + 15));
-		FVector2D top2 = Camera::ProjectWorldToScreen(FVector(vHeadBone.x - 40, vHeadBone.y - 40, vHeadBone.z + 15));
-		FVector2D top3 = Camera::ProjectWorldToScreen(FVector(vHeadBone.x - 40, vHeadBone.y + 40, vHeadBone.z + 15));
-		FVector2D top4 = Camera::ProjectWorldToScreen(FVector(vHeadBone.x + 40, vHeadBone.y + 40, vHeadBone.z + 15));
-
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(bottom1.x, bottom1.y), ImVec2(top1.x, top1.y), IM_COL32(0, 255, 0, 255), 0.1f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(bottom2.x, bottom2.y), ImVec2(top2.x, top2.y), IM_COL32(0, 255, 0, 255), 0.1f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(bottom3.x, bottom3.y), ImVec2(top3.x, top3.y), IM_COL32(0, 255, 0, 255), 0.1f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(bottom4.x, bottom4.y), ImVec2(top4.x, top4.y), IM_COL32(0, 255, 0, 255), 0.1f);
-
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(bottom1.x, bottom1.y), ImVec2(bottom2.x, bottom2.y), IM_COL32(0, 255, 0, 255), 0.1f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(bottom2.x, bottom2.y), ImVec2(bottom3.x, bottom3.y), IM_COL32(0, 255, 0, 255), 0.1f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(bottom3.x, bottom3.y), ImVec2(bottom4.x, bottom4.y), IM_COL32(0, 255, 0, 255), 0.1f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(bottom4.x, bottom4.y), ImVec2(bottom1.x, bottom1.y), IM_COL32(0, 255, 0, 255), 0.1f);
-
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(top1.x, top1.y), ImVec2(top2.x, top2.y), IM_COL32(0, 255, 0, 255), 0.1f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(top2.x, top2.y), ImVec2(top3.x, top3.y), IM_COL32(0, 255, 0, 255), 0.1f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(top3.x, top3.y), ImVec2(top4.x, top4.y), IM_COL32(0, 255, 0, 255), 0.1f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(top4.x, top4.y), ImVec2(top1.x, top1.y), IM_COL32(0, 255, 0, 255), 0.1f);
-	//	if (screen.x > 0 && screen.y > 0)
-		{
-			//cout << "da ve" << endl;
-			ImDrawList* drawList = ImGui::GetBackgroundDrawList();
-			drawList->AddCircleFilled(
-				ImVec2(screen.x, screen.y),
-				5.0f,                      
-				IM_COL32(255, 0, 0, 255),  
-				12                         
-			);
-		}
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone1.x, Bone1.y), ImVec2(Bone2.x, Bone2.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone1.x, Bone1.y), ImVec2(Bone3.x, Bone3.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone2.x, Bone2.y), ImVec2(Bone4.x, Bone4.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone3.x, Bone3.y), ImVec2(Bone5.x, Bone5.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone5.x, Bone5.y), ImVec2(Bone6.x, Bone6.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone4.x, Bone4.y), ImVec2(Bone7.x, Bone7.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone1.x, Bone1.y), ImVec2(Bone8.x, Bone8.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone8.x, Bone8.y), ImVec2(Bone9.x, Bone9.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone9.x, Bone9.y), ImVec2(Bone10.x, Bone10.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone9.x, Bone9.y), ImVec2(Bone11.x, Bone11.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone10.x, Bone10.y), ImVec2(Bone13.x, Bone13.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone11.x, Bone11.y), ImVec2(Bone12.x, Bone12.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone13.x, Bone13.y), ImVec2(Bone14.x, Bone14.y), ImColor(255, 255, 255), 1.0f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone12.x, Bone12.y), ImVec2(Bone15.x, Bone15.y), ImColor(255, 255, 255), 1.0f);
 
 
 	}

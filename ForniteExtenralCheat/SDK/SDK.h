@@ -6,14 +6,14 @@
 #include <cmath>
 #define M_PI 3.14159265358979323846
 
-struct alignas(0x10) FQuat final
+struct FQuat
 {
-public:
-	float                                         X;                                             
-	float                                         Y;                                             
-	float                                         Z;                                             
-	float                                         W;                                             
+	double x;
+	double y;
+	double z;
+	double w;
 };
+
 class FVector2D
 {
 public:
@@ -91,6 +91,12 @@ public:
 		return FVector(x / flNum, y / flNum, z / flNum);
 	}
 
+	bool operator==(const FVector& v) const
+	{
+		const double epsilon = 1e-6; 
+		return (fabs(x - v.x) < epsilon) && (fabs(y - v.y) < epsilon) && (fabs(z - v.z) < epsilon);
+	}
+
 	FVector operator*(double flNum) { return FVector(x * flNum, y * flNum, z * flNum); }
 };
 struct FRotator
@@ -114,46 +120,50 @@ struct _MATRIX
 		float m[4][4];
 	};
 };
-struct FTransform final
+struct FTransform
 {
-public:
-	struct FQuat                                  Rotation;
-	struct FVector                                Translation;
-	struct FVector                                Scale3D;
+	FQuat rotation;
+	FVector translation;
+	uint8_t pad1c[0x8];
+	FVector scale3d;
+	uint8_t pad2c[0x8];
 
 	D3DMATRIX ToMatrixWithScale()
 	{
-		D3DMATRIX m;
-		m._41 = Translation.x;
-		m._42 = Translation.y;
-		m._43 = Translation.z;
+		D3DMATRIX m{};
 
-		float x2 = Rotation.X + Rotation.X;
-		float y2 = Rotation.Y + Rotation.Y;
-		float z2 = Rotation.Z + Rotation.Z;
+		const FVector Scale
+		(
+			(scale3d.x == 0.0) ? 1.0 : scale3d.x,
+			(scale3d.y == 0.0) ? 1.0 : scale3d.y,
+			(scale3d.z == 0.0) ? 1.0 : scale3d.z
+		);
 
-		float xx2 = Rotation.X * x2;
-		float yy2 = Rotation.Y * y2;
-		float zz2 = Rotation.Z * z2;
-		m._11 = (1.0f - (yy2 + zz2)) * Scale3D.x;
-		m._22 = (1.0f - (xx2 + zz2)) * Scale3D.y;
-		m._33 = (1.0f - (xx2 + yy2)) * Scale3D.z;
+		const double x2 = rotation.x + rotation.x;
+		const double y2 = rotation.y + rotation.y;
+		const double z2 = rotation.z + rotation.z;
+		const double xx2 = rotation.x * x2;
+		const double yy2 = rotation.y * y2;
+		const double zz2 = rotation.z * z2;
+		const double yz2 = rotation.y * z2;
+		const double wx2 = rotation.w * x2;
+		const double xy2 = rotation.x * y2;
+		const double wz2 = rotation.w * z2;
+		const double xz2 = rotation.x * z2;
+		const double wy2 = rotation.w * y2;
 
-		float yz2 = Rotation.Y * z2;
-		float wx2 = Rotation.W * x2;
-		m._32 = (yz2 - wx2) * Scale3D.z;
-		m._23 = (yz2 + wx2) * Scale3D.y;
-
-		float xy2 = Rotation.X * y2;
-		float wz2 = Rotation.W * z2;
-		m._21 = (xy2 - wz2) * Scale3D.y;
-		m._12 = (xy2 + wz2) * Scale3D.x;
-
-		float xz2 = Rotation.X * z2;
-		float wy2 = Rotation.W * y2;
-		m._31 = (xz2 + wy2) * Scale3D.z;
-		m._13 = (xz2 - wy2) * Scale3D.x;
-
+		m._41 = translation.x;
+		m._42 = translation.y;
+		m._43 = translation.z;
+		m._11 = (1.0f - (yy2 + zz2)) * Scale.x;
+		m._22 = (1.0f - (xx2 + zz2)) * Scale.y;
+		m._33 = (1.0f - (xx2 + yy2)) * Scale.z;
+		m._32 = (yz2 - wx2) * Scale.z;
+		m._23 = (yz2 + wx2) * Scale.y;
+		m._21 = (xy2 - wz2) * Scale.y;
+		m._12 = (xy2 + wz2) * Scale.x;
+		m._31 = (xz2 + wy2) * Scale.z;
+		m._13 = (xz2 - wy2) * Scale.x;
 		m._14 = 0.0f;
 		m._24 = 0.0f;
 		m._34 = 0.0f;
@@ -161,8 +171,8 @@ public:
 
 		return m;
 	}
-
 };
+
 struct FMinimalViewInfo final
 {
 public:
