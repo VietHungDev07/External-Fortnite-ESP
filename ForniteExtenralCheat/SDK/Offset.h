@@ -17,6 +17,7 @@ namespace Offset
 	const uintptr_t PlayerArray = 0x2C8;
 	const uintptr_t SizePlayerArray = 0xC;
 	const uintptr_t PawnPrivate = 0x328;
+	const uintptr_t TeamIndex = 0x11A9;
 	//Root Componet:
 	uintptr_t RootComponent = 0x1B0;
 	uintptr_t RelativeLocation = 0x140;
@@ -29,7 +30,8 @@ namespace Offset
 	const uintptr_t Mesh = 0x330; 
 	const uintptr_t CachedBoneSpaceTransforms = 0x5E8; //BoneArray
 	const uintptr_t CachedComponentSpaceTransforms = 0x5F8; //BoneCache
-	const uintptr_t ComponentToWorld = 0x1E0; //class alignas(0x10) USceneComponent : public UActorComponent ->
+	const uintptr_t ComponentToWorld = 0x1E0; //class alignas(0x10) USceneComponent : public UActorComponent -> ComponentToWorld sometime SDKGeneration will not have 
+
 
 
 

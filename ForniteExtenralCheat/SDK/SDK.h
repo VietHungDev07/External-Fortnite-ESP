@@ -181,28 +181,6 @@ public:
 	float                                         FOV;                                          
 };
 
-namespace DATA
-{
-	//World:
-	extern uintptr_t Uworld;
-
-
-	//LocalPlayer
-	extern uintptr_t OwningGameInstance;
-	extern uintptr_t LocalPlayers;
-	extern uintptr_t PlayerController;
-	extern uintptr_t AcknowledgedPawn;
-
-	//Aactor:
-	extern uintptr_t GameState;
-	extern uintptr_t PlayerArray;
-	extern uintptr_t PawnPrivate;
-
-	//Camera;
-	extern uintptr_t PlayerCameraManager;
-	extern FMinimalViewInfo CameraCachePrivate;
-
-}
 extern int ScreenHeight;
 extern int ScreenWidth;
 extern int ScreenLeft;
@@ -228,6 +206,7 @@ namespace Aactor
 	int GetPlayerArraySize();
 	uintptr_t GetActorAddress(int index);
 	FVector GetActorLocation(uintptr_t actor);
+	int GetTeamID(uintptr_t actor);
 
 }
 struct SCamera

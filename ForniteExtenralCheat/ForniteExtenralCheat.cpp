@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <windows.h>
 #include <dwmapi.h>
 #include <d3d9.h>
@@ -18,26 +18,13 @@ int ScreenLeft = NULL;
 int ScreenRight = NULL;
 int ScreenTop = NULL;
 int ScreenBottom = NULL;
-namespace DATA
+namespace Setting
 {
-	//World:
-	 uintptr_t Uworld;
-
-
-	//LocalPlayer
-	 uintptr_t OwningGameInstance;
-	 uintptr_t LocalPlayers;
-	 uintptr_t PlayerController;
-	 uintptr_t AcknowledgedPawn;
-
-	//Aactor:
-	 uintptr_t GameState;
-	 uintptr_t PlayerArray;
-	 uintptr_t PawnPrivate;
-
-	//Camera;
-	 uintptr_t PlayerCameraManager;
-	 FMinimalViewInfo CameraCachePrivate;
+	bool ESP = false;
+	bool Box = false;
+	bool line = false;
+	bool Skeleton = false;
+	bool Distance = false;
 
 }
 
@@ -65,51 +52,118 @@ void InputHandler() {
 }
 void DrawEntity()
 {
-
-	int size = Aactor::GetPlayerArraySize();
-
-
-	for (int i = 0; i < size; i++)
+	if (Setting::ESP)
 	{
+		for (int i = 0; i < Aactor::GetPlayerArraySize(); i++)
+		{
+			auto AactorAddress = Aactor::GetActorAddress(i);
+			if (AactorAddress == UPlayer::GetLocalPlayer()) 
+				continue;
 
-		auto AactorAddress = Aactor::GetActorAddress(i);
-		uintptr_t mesh = Bone::GetMesh(AactorAddress);
 
-		FVector2D Bone1 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 66));
-		FVector2D Bone2 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 9));
-		FVector2D Bone3 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 38));
-		FVector2D Bone4 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 10));
-		FVector2D Bone5 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 39));
-		FVector2D Bone6 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 62));
-		FVector2D Bone7 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 33));
-		FVector2D Bone8 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 7));
-		FVector2D Bone9 =  Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 3));
-		FVector2D Bone10 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 71));
-		FVector2D Bone11 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 78));
-		FVector2D Bone12 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 79));
-		FVector2D Bone13 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 72));
-		FVector2D Bone14 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 75));
-		FVector2D Bone15 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 82));
+
+			if (Setting::Box || Setting::Skeleton || Setting::line || Setting::Distance)
+			{
+				uintptr_t mesh = Bone::GetMesh(AactorAddress);
+
+				FVector2D Bone1 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 66)); 
+				FVector2D Bone14 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 75));
+				FVector2D Bone15 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 82));
+
+				if (Setting::Box)
+				{
+					float HeadX = Bone1.x;
+					float HeadY = Bone1.y;
+
+				
+					float FeetY = max(Bone14.y, Bone15.y);
+
+			
+					float Height = FeetY - HeadY;
+
 		
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone1.x, Bone1.y), ImVec2(Bone2.x, Bone2.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone1.x, Bone1.y), ImVec2(Bone3.x, Bone3.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone2.x, Bone2.y), ImVec2(Bone4.x, Bone4.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone3.x, Bone3.y), ImVec2(Bone5.x, Bone5.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone5.x, Bone5.y), ImVec2(Bone6.x, Bone6.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone4.x, Bone4.y), ImVec2(Bone7.x, Bone7.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone1.x, Bone1.y), ImVec2(Bone8.x, Bone8.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone8.x, Bone8.y), ImVec2(Bone9.x, Bone9.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone9.x, Bone9.y), ImVec2(Bone10.x, Bone10.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone9.x, Bone9.y), ImVec2(Bone11.x, Bone11.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone10.x, Bone10.y), ImVec2(Bone13.x, Bone13.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone11.x, Bone11.y), ImVec2(Bone12.x, Bone12.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone13.x, Bone13.y), ImVec2(Bone14.x, Bone14.y), ImColor(255, 255, 255), 1.0f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Bone12.x, Bone12.y), ImVec2(Bone15.x, Bone15.y), ImColor(255, 255, 255), 1.0f);
+					float Width = Height * 0.4f;
+
+					float Left = HeadX - Width / 2;
+					float Right = HeadX + Width / 2;
+
+					ImGui::GetBackgroundDrawList()->AddRect(
+						ImVec2(Left, HeadY),
+						ImVec2(Right, FeetY),
+						ImColor(255, 255, 0),   
+						1.0f
+					);
+				}
+
+			
+				if (Setting::line)
+				{
+					FVector2D L1 = Camera::ProjectWorldToScreen(Aactor::GetActorLocation(AactorAddress)); 
+					FVector2D L2 = Camera::ProjectWorldToScreen(Aactor::GetActorLocation(UPlayer::GetLocalPlayer())); 
+
+					ImGui::GetBackgroundDrawList()->AddLine(
+						ImVec2(L2.x, L2.y),
+						ImVec2(L1.x, L1.y),
+						ImColor(0, 0, 0),   
+						1.8f
+					);
+				}
 
 
+
+				if (Setting::Distance)
+				{
+					float Distance = Aactor::GetActorLocation(AactorAddress)
+						.Distance(Aactor::GetActorLocation(UPlayer::GetLocalPlayer())) / 100.0f;
+
+					char text[32];
+					sprintf(text, "%.1f m", Distance);
+
+					ImGui::GetBackgroundDrawList()->AddText(
+						ImVec2(Bone1.x + 5, Bone1.y - 15),
+						ImColor(255, 255, 255),
+						text
+					);
+				}
+
+		
+				if (Setting::Skeleton)
+				{
+					FVector2D Bone2 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 9));
+					FVector2D Bone3 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 38));
+					FVector2D Bone4 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 10));
+					FVector2D Bone5 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 39));
+					FVector2D Bone6 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 62));
+					FVector2D Bone7 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 33));
+					FVector2D Bone8 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 7));
+					FVector2D Bone9 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 3));
+					FVector2D Bone10 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 71));
+					FVector2D Bone11 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 78));
+					FVector2D Bone12 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 79));
+					FVector2D Bone13 = Camera::ProjectWorldToScreen(Bone::GetBoneWithRotation(mesh, 72));
+
+					auto draw = ImGui::GetBackgroundDrawList();
+
+					draw->AddLine(ImVec2(Bone1.x, Bone1.y), ImVec2(Bone2.x, Bone2.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone1.x, Bone1.y), ImVec2(Bone3.x, Bone3.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone2.x, Bone2.y), ImVec2(Bone4.x, Bone4.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone3.x, Bone3.y), ImVec2(Bone5.x, Bone5.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone5.x, Bone5.y), ImVec2(Bone6.x, Bone6.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone4.x, Bone4.y), ImVec2(Bone7.x, Bone7.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone1.x, Bone1.y), ImVec2(Bone8.x, Bone8.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone8.x, Bone8.y), ImVec2(Bone9.x, Bone9.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone9.x, Bone9.y), ImVec2(Bone10.x, Bone10.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone9.x, Bone9.y), ImVec2(Bone11.x, Bone11.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone10.x, Bone10.y), ImVec2(Bone13.x, Bone13.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone11.x, Bone11.y), ImVec2(Bone12.x, Bone12.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone13.x, Bone13.y), ImVec2(Bone14.x, Bone14.y), ImColor(255, 255, 255), 1.0f);
+					draw->AddLine(ImVec2(Bone12.x, Bone12.y), ImVec2(Bone15.x, Bone15.y), ImColor(255, 255, 255), 1.0f);
+				}
+			}
+		}
 	}
-
 }
+
 void Render()
 {
 	if (GetAsyncKeyState(VK_INSERT) & 1)
@@ -118,17 +172,27 @@ void Render()
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+
 //	ImGui::GetIO().MouseDrawCursor = menuShow;
 	DrawEntity();
 	if (menuShow)
 	{
-		//InputHandler();
-		ImGui::SetNextWindowSize(ImVec2(300, 300));
-		ImGui::Begin("DIT ME THANG YUN CHAN", 0);
+		ImGui::SetNextWindowSize(ImVec2(350, 350));
+		ImGui::Begin("The Blade Dancerr", nullptr, ImGuiWindowFlags_NoCollapse);
 
+		ImGui::Text("Visual Settings");
+		ImGui::Separator();
+
+		ImGui::Checkbox("ESP", &Setting::ESP);
+		ImGui::Checkbox("Box", &Setting::Box);
+		ImGui::Checkbox("Line", &Setting::line);
+		ImGui::Checkbox("Skeleton", &Setting::Skeleton);
+		ImGui::Spacing();
+		ImGui::Separator();
 
 		ImGui::End();
 	}
+
 	ImGui::EndFrame();
 
 	DirectX9Interface::pDevice->SetRenderState(D3DRS_ZENABLE, false);
@@ -245,6 +309,72 @@ bool DirectXInit() {
 
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
+	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\arial.ttf", 18.0f);
+	auto& style = ImGui::GetStyle();
+	style.WindowPadding = ImVec2(15, 15);
+	style.WindowRounding = 10.0f;
+	style.FramePadding = ImVec2(5, 5);
+	style.FrameRounding = 12.0f; // Make all elements (checkboxes, etc) circles
+	style.ItemSpacing = ImVec2(12, 8);
+	style.ItemInnerSpacing = ImVec2(8, 6);
+	style.IndentSpacing = 25.0f;
+	style.ScrollbarSize = 15.0f;
+	style.ScrollbarRounding = 9.0f;
+	style.GrabMinSize = 20.0f; // Make grab a circle
+	style.GrabRounding = 12.0f;
+	style.PopupRounding = 7.f;
+	style.Alpha = 1.0;
+
+	ImVec4* colors = style.Colors;
+	colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+	colors[ImGuiCol_TextDisabled] = ImVec4(0.32f, 0.32f, 0.32f, 1.00f);
+	colors[ImGuiCol_WindowBg] = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
+	colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	colors[ImGuiCol_PopupBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.98f);
+	colors[ImGuiCol_Border] = ImVec4(0.00f, 0.00f, 0.00f, 0.30f);
+	colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+	colors[ImGuiCol_FrameBg] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.95f, 0.95f, 0.95f, 0.30f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(0.66f, 0.66f, 0.66f, 0.67f);
+	colors[ImGuiCol_TitleBg] = ImVec4(0.96f, 0.96f, 0.96f, 1.00f);
+	colors[ImGuiCol_TitleBgActive] = ImVec4(0.82f, 0.82f, 0.82f, 1.00f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 1.00f, 1.00f, 0.51f);
+	colors[ImGuiCol_MenuBarBg] = ImVec4(0.86f, 0.86f, 0.86f, 1.00f);
+	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.98f, 0.98f, 0.98f, 0.53f);
+	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.69f, 0.69f, 0.69f, 0.80f);
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.49f, 0.49f, 0.49f, 0.80f);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.49f, 0.49f, 0.49f, 1.00f);
+	colors[ImGuiCol_CheckMark] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+	colors[ImGuiCol_SliderGrab] = ImVec4(1.000f, 0.777f, 0.578f, 0.780f);
+	colors[ImGuiCol_SliderGrabActive] = ImVec4(1.000f, 0.987f, 0.611f, 0.600f);
+	colors[ImGuiCol_Button] = ImVec4(1.00f, 0.77f, 0.00f, 1.00f);
+	colors[ImGuiCol_ButtonHovered] = ImVec4(1.00f, 1.00f, 0.00f, 1.00f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(0.84f, 0.97f, 0.01f, 1.00f);
+	colors[ImGuiCol_Header] = ImVec4(1.00f, 1.00f, 1.00f, 0.31f);
+	colors[ImGuiCol_HeaderHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.80f);
+	colors[ImGuiCol_HeaderActive] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	colors[ImGuiCol_Separator] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
+	colors[ImGuiCol_SeparatorHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.78f);
+	colors[ImGuiCol_SeparatorActive] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	colors[ImGuiCol_ResizeGrip] = ImVec4(0.80f, 0.80f, 0.80f, 0.56f);
+	colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.67f);
+	colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.95f);
+	colors[ImGuiCol_Tab] = ImVec4(1.00f, 0.54f, 0.01f, 0.71f);
+	colors[ImGuiCol_TabHovered] = ImVec4(0.96f, 0.73f, 0.09f, 0.90f);
+	colors[ImGuiCol_TabActive] = ImVec4(1.00f, 0.97f, 0.00f, 1.00f);
+	colors[ImGuiCol_TabUnfocused] = ImVec4(0.92f, 0.93f, 0.94f, 0.99f);
+	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	colors[ImGuiCol_PlotLines] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
+	colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+	colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+	colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.45f, 0.00f, 1.00f);
+	colors[ImGuiCol_TextSelectedBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.35f);
+	colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 1.00f, 0.95f);
+	colors[ImGuiCol_NavHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.80f);
+	colors[ImGuiCol_NavWindowingHighlight] = ImVec4(0.70f, 0.70f, 0.70f, 0.70f);
+	colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.20f);
+	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
+	
 	ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantTextInput || ImGui::GetIO().WantCaptureKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
@@ -315,6 +445,16 @@ void SetupWindow() {
 
 int main()
 {
+	cout << R"(
+  ________   _________ ______ _____  _   _          _      
+ |  ____\ \ / /__   __|  ____|  __ \| \ | |   /\   | |     
+ | |__   \ V /   | |  | |__  | |__) |  \| |  /  \  | |     
+ |  __|   > <    | |  |  __| |  _  /| . ` | / /\ \ | |     
+ | |____ / . \   | |  | |____| | \ \| |\  |/ ____ \| |____ 
+ |______/_/ \_\  |_|  |______|_|  \_\_| \_/_/    \_\______|
+                                           
+)";
+
 	cout << "Checking Driver..." << endl;
 	if (!Driver::Init())
 	{
@@ -352,18 +492,8 @@ int main()
 	GetWindowThreadProcessId(_HWND, (LPDWORD)&Driver::ProcessID); // Cast INT32 to LPDWORD
 	std::cout << "Found Game Running in PID: " << hex << Driver::ProcessID << std::endl;
 	BaseAddress = Driver::GetBase();
-	//if (BaseAddress < 3)
-	{
-		std::cout << "Found BaseAddress Game: " << hex << BaseAddress << std::endl;
-	}
+	std::cout << "Found BaseAddress Game: " << hex << BaseAddress << std::endl;
 	Driver::CR3();
-	//else
-	//{
-	//	cout << "Cannot Found BaseAdress Game ReTry Again" << endl;
-	//	Sleep(3000);
-	//	return 0;
-	//
-	//}
 	OverlayWindow::Name = L" ";
 	SetupWindow();
 	DirectXInit();

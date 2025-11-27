@@ -71,8 +71,6 @@ namespace World
 	uintptr_t GetWorld()
 	{
 		uintptr_t world = ReadMemory<uintptr_t>(BaseAddress + Offset::UWorld);
-	//	std::cout << "[World] BaseAddress + UWorld = 0x" << std::hex << (BaseAddress + Offset::UWorld) << std::endl;
-	//	std::cout << "[World] UWorld = 0x" << std::hex << world << std::endl;
 		return world;
 	}
 }
@@ -82,20 +80,14 @@ namespace UPlayer
 	uintptr_t GetInstanceGame()
 	{
 		uintptr_t instance = ReadMemory<uintptr_t>(World::GetWorld() + Offset::OwningGameInstance);
-	//	std::cout << "[UPlayer] GameInstance = 0x" << std::hex << instance << std::endl;
 		return instance;
 	}
 
 	uintptr_t GetAPlayerController()
 	{
 		uintptr_t localPlayers = ReadMemory<uintptr_t>(GetInstanceGame() + Offset::LocalPlayers);
-	//	std::cout << "[UPlayer] LocalPlayers = 0x" << std::hex << localPlayers << std::endl;
-
 		uintptr_t player = ReadMemory<uintptr_t>(localPlayers);
-	//	std::cout << "[UPlayer] LocalPlayer = 0x" << std::hex << player << std::endl;
-
 		uintptr_t controller = ReadMemory<uintptr_t>(player + Offset::PlayerController);
-	//	std::cout << "[UPlayer] PlayerController = 0x" << std::hex << controller << std::endl;
 
 		return controller;
 	}
@@ -103,9 +95,10 @@ namespace UPlayer
 	uintptr_t GetLocalPlayer()
 	{
 		uintptr_t pawn = ReadMemory<uintptr_t>(GetAPlayerController() + Offset::AcknowledgedPawn);
-	//	std::cout << "[UPlayer] LocalPawn = 0x" << std::hex << pawn << std::endl;
 		return pawn;
 	}
+
+
 }
 
 namespace Aactor
@@ -113,21 +106,18 @@ namespace Aactor
 	uintptr_t GetGameState()
 	{
 		uintptr_t gs = ReadMemory<uintptr_t>(World::GetWorld() + Offset::GameState);
-	//	std::cout << "[Aactor] GameState = 0x" << std::hex << gs << std::endl;
 		return gs;
 	}
 
 	uintptr_t GetPlayerArray()
 	{
 		uintptr_t array = ReadMemory<uintptr_t>(GetGameState() + Offset::PlayerArray);
-		//std::cout << "[Aactor] PlayerArray = 0x" << std::hex << array << std::endl;
 		return array;
 	}
 
 	int GetPlayerArraySize()
 	{
 		int size = ReadMemory<int>(GetGameState() + Offset::PlayerArray + Offset::SizePlayerArray);
-		//std::cout << "[Aactor] PlayerArraySize = " << std::dec << size << std::endl;
 		return size;
 	}
 
@@ -135,20 +125,22 @@ namespace Aactor
 	{
 		uintptr_t array = GetPlayerArray();
 		uintptr_t actor = ReadMemory<uintptr_t>(array + (index * sizeof(uintptr_t)));
-
-		//std::cout << "[Aactor] Actor[" << index << "] = 0x" << std::hex << actor << std::endl;
-
 		return ReadMemory<uintptr_t>(actor+Offset::PawnPrivate);
 	}
 	FVector GetActorLocation(uintptr_t actor)
 	{
 		uintptr_t root = ReadMemory<uintptr_t>(actor + Offset::RootComponent);
-	//	std::cout << "root: " << root << std::endl;
-		//if (!root) return FVector(); 
-
 		FVector location = ReadMemory<FVector>(root + Offset::RelativeLocation);
 		return location;
 	}
+
+	int GetTeamID(uintptr_t actor)
+	{
+		int TeamID = ReadMemory<uintptr_t>(actor + Offset::TeamIndex);
+		return TeamID;
+	}
+
+
 
 }
 
