@@ -17,7 +17,6 @@
 - **ImGui overlay**
 - **Offset-based memory reading**
 - **Supports latest Fortnite versions (using updated offsets)**
-- 
 # Preview
 <img width="1920" height="1080" alt="Screenshot (5)" src="https://github.com/user-attachments/assets/cb2e6c23-637e-4777-b20f-35bec19fdcb1" />
 
